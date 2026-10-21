@@ -1,22 +1,40 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
-
+import { Button, StyleSheet, Text, TextInput, View , FlatList} from 'react-native';
+import { useState } from 'react';
+import Item from './src/components/Item';
 
 export default function App() {
+ 
+  const [text, setText] = useState("");
+  const [tasklist, setTasklist] = useState([]);
+
+  function handleInputChange(text) {
+  
+    setText(text);
+
+  }
+  function handleAddItem() {
+
+    setTasklist([...tasklist, text]);
+  }
+
   return (
     <View style={styles.container}>
 
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Zadaj ulohu" />
-        <Button title="ADD"/>
+        <TextInput onChangeText={handleInputChange} style={styles.input} placeholder="Zadaj ulohu" />
+        <Button onPress={handleAddItem} title="ADD"/>
       </View>
 
-      <View style={styles.taskContainer}>
-        <Text>ULOHY:</Text>
+      <FlatList
+        data={tasklist}
+        renderItem={({item}) => <Item title={item.title} />}
+        keyExtractor={item => item.id}
+      />
         <StatusBar style="auto" />
       </View>
 
-    </View>
+    
   );
 }
 
